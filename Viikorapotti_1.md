@@ -1,4 +1,5 @@
-#Suunnitelu
+# Suunnitelu
+
 Pycrypto -softan suunnittelu aloitettiin minun henkilökohtaisesta kiinnostukessta
 salaus-menetelmiä kohtaan. Eli RSA todettiin siis sopivaksi aiheeksi. Aiheessa on
 monta kiinnostavaa asiaa yhdessä. Esim. isojen alkulukujen generointi on kiinostava
@@ -6,7 +7,8 @@ aihe. Myös teoria RSA:n taustalla kiinnostaa todisteluun siitä että RSA:n tur
 on kiinni isojen lukujen faktorisoinnin kanssa. Eli lukujen faktorointtin ei ole 
 olemassa tehokkasta algoritmiä.
 
-#Toteutus
+# Toteutus
+
 Toteutus aloitettiin Python (3) -kielen toteutuksen parissa. Identifioitiin siis ongelma-
 kohtia toteutuksessa. Vastaan tuli aiheita kuten lukujen primarility, eli numeroiden
 alkuluvullisuus. Nopea toteutus teki siis isoja alkulukuja melko nopeaan tahtiin. Eli
@@ -26,18 +28,21 @@ salauksen nopeus. Eli softa tekee tiedostoni, jossa on ensin otsikkotietueena AE
 RSA:n hitaus on huomattava niin vain AES -avain kryptataan ja AES -salattu data tulee
 RSA-salatun AES -salasanan perään.
 
-#Lessons learned
+# Lessons learned
+
 Tällä viikolla opin että Pythonin ** operaattori on tuskallisen hidas verrattuna 
 sisäänrakennetun pow() -funktioon verrattuna.
 
-#Edistysaskeleet
+# Edistysaskeleet
+
 Softa osaa tehdä avainparit, ja salata dataa, ja purkaa sitä annettulla avaimella.
 
-#Epäselvyyksiä
+# Epäselvyyksiä
+
 Ei mitään raportoitavia epäselvyyksiä. Kävimme läpi Hannu Kärnan kanssa ohjelmistoa
 ja päädyimme sopivaan laajuuteen ja ns. scopeen joka softalla on.
 
-#Mitä teen seuraavaksi
+# Mitä teen seuraavaksi
 Tarkoituksena on tehdä loppuun asti asiat jotka liityvät salaus-ympäristön kokoamiseen.
 Tarvitaan toimivat softat jotka tekevät mitä on tarkoitus tehdä:
         o avainparin generointi
