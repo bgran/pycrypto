@@ -1,2 +1,2 @@
 # pycrypto
-RSA implementation
+RSA implementation with Python language
