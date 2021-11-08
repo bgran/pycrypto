@@ -1,4 +1,5 @@
-#Projektin aihe ja scope
+# Projektin aihe ja scope
+
 Valittuna RSA -salauksen toteuttaminen AES -symmetrisellä salauksella.
 Ohjelmisto on kehitettävä Python -kielessä. Kattavuudeltaan tehdään ohjelmisto
 joka toteuttaa RSA -salauksen ja tekstikäyttöliittymän sitä varten. Tavoiteena
