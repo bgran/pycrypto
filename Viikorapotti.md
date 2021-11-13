@@ -57,7 +57,7 @@ Tarvitaan toimivat softat jotka tekevät mitä on tarkoitus tehdä:
 Nämä kolme annettuna on mahdollista laajentaa asioita huomattavasti.
 
 
-## 13..11.2021
+## 13.11.2021
 
 Aikaa käytetty projektiin: 7 tuntia.
 
