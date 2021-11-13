@@ -66,8 +66,8 @@ def main():
 	filef_pub  = open(foo+".pub", "wb")
 
 	priv, pub = rsa.gen_keypair()
-	print("priv: {}".format(priv))
-	print("pub:  {}".format(pub))
+	#print("priv: {}".format(priv))
+	#print("pub:  {}".format(pub))
 
 	priv_comb = priv[0] + "\n" + priv[1]
 	pub_comb = pub[0] + "\n" + pub[1]

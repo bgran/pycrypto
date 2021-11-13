@@ -214,7 +214,7 @@ def marshall_key(tup):
 	#	(t1.to_bytes(int(t1.bit_length()/8),byteorder='big'),
 	#	 t2.to_bytes(int(t2.bit_length()/8),byteorder='big'))
 
-	print ("marshall_keys: t1: {}".format(t1))
+	#print ("marshall_keys: t1: {}".format(t1))
 	return (t1, t2)
 def gen_keypair():
 	p,_ = Prime(RSA_bits, RM_iterations).gen_prime()
