@@ -84,6 +84,13 @@ generoida. Havaittiin että ** -operaattorin tehokkuus on suurinpiirtein pow()
 -metoodin tasoinen. Tultiin lopputulokseen että RSA -salaus tuottaa suuria
 arvoja salattuja tavuja. Suuria tarkoittaa siis isoja lukuja.
 
+### Epäselviä asioita ja vaikeuksia
+
+On erittäin epäselvää mitä sovelluksen piirissä tehdään testikattavuus. Tarkoitaako
+testikattavus siis että mahdollisimman paljon toteutusta saadaan testattua? Checkstyle
+on myös epäselvä asia. Koodin laadun seuranta on epäselvää eikä selviä tarpeeksi
+kurssien materiaaleista.
+
 ### Mitä seuraavaksi?
 
 Ohjelmiston pitää toteuttaa vakaita kryptauksia, eli komentorivi-käyttöliittymä
