@@ -2,6 +2,8 @@
 
 ## 6.11.2021
 
+Aikaa käytetty projektiin: 12 tuntia.
+
 ### Suunnitelu
 
 Pycrypto -softan suunnittelu aloitettiin minun henkilökohtaisesta kiinnostukessta
@@ -57,6 +59,8 @@ Nämä kolme annettuna on mahdollista laajentaa asioita huomattavasti.
 
 ## 13..11.2021
 
+Aikaa käytetty projektiin: 7 tuntia.
+
 ### Edistys tällä viikolla
 
 Toteutettiin unittestit Pythonin unittest -Python -standaardikirjaston parissa.
@@ -90,6 +94,8 @@ On erittäin epäselvää mitä sovelluksen piirissä tehdään testikattavuus. 
 testikattavus siis että mahdollisimman paljon toteutusta saadaan testattua? Checkstyle
 on myös epäselvä asia. Koodin laadun seuranta on epäselvää eikä selviä tarpeeksi
 kurssien materiaaleista.
+
+Miten tuntikirjanpito toimii projektissa?
 
 ### Mitä seuraavaksi?
 
