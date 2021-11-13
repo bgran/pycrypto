@@ -8,6 +8,7 @@ import random
 import time
 from time import time as ptime
 
+RSA_bits = 1024
 RM_iterations = 20
 
 def pause():
@@ -36,6 +37,10 @@ class Prime_Gen:
 		return(self.tbl)
 
 class Prime:
+	"""This class does generate prime numbers. It supports simple primality
+	tests for a set of some odd 1229 priems that are less than 10000. The
+	real test is the Rabin-Miller primality test."""
+
 	def __init__(self, prime_bits, low_prime_list):
 		self.first_primes= Prime_Gen(low_prime_list).gen()
 		#print(list(self.first_primes))
@@ -186,7 +191,7 @@ def multiplicative_inverse(e, phi):
 		return d + phi
 
 
-def gen_keypair(p, q):
+def __gen_keypair(p, q):
 	#print("type: p: {}".format(type(p)))
 	#print("type: q: {}".format(type(q)))
 	n = p * q
@@ -202,7 +207,23 @@ def gen_keypair(p, q):
 	#phi = float(phi)
 	d = multiplicative_inverse(e, phi)
 	return ((e, n), (d, n))
+def marshall_key(tup):
+	t1 = str(tup[0])
+	t2 = str(tup[1])
+	#foo = \
+	#	(t1.to_bytes(int(t1.bit_length()/8),byteorder='big'),
+	#	 t2.to_bytes(int(t2.bit_length()/8),byteorder='big'))
 
+	print ("marshall_keys: t1: {}".format(t1))
+	return (t1, t2)
+def gen_keypair():
+	p,_ = Prime(RSA_bits, RM_iterations).gen_prime()
+	q,_ = Prime(RSA_bits, RM_iterations).gen_prime()
+	(priv_t, pub_t) = __gen_keypair(p, q)
+	(priv_e, priv_n) = marshall_key(priv_t)
+	(pub_d, pub_n) = marshall_key(pub_t)
+	return((priv_e, priv_n), (pub_d, pub_n))
+	
 def encrypt(pk, pt):
 	key, n = pk
 	#print("KALAA: {}".format(type(pt)))
