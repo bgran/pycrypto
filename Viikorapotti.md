@@ -49,9 +49,9 @@ ja päädyimme sopivaan laajuuteen ja ns. scopeen joka softalla on.
 ### Mitä teen seuraavaksi
 Tarkoituksena on tehdä loppuun asti asiat jotka liityvät salaus-ympäristön kokoamiseen.
 Tarvitaan toimivat softat jotka tekevät mitä on tarkoitus tehdä:
-        1. avainparin generointi
-        2. salaus
-        3. purkaminen
+        - avainparin generointi
+        - salaus
+        - purkaminen
 Nämä kolme annettuna on mahdollista laajentaa asioita huomattavasti.
 
 
