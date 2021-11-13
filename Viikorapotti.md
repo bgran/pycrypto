@@ -1,4 +1,8 @@
-# Suunnitelu
+# Viikkoraportit
+
+## 6.11.2021
+
+### Suunnitelu
 
 Pycrypto -softan suunnittelu aloitettiin minun henkilökohtaisesta kiinnostukessta
 salaus-menetelmiä kohtaan. Eli RSA todettiin siis sopivaksi aiheeksi. Aiheessa on
@@ -7,7 +11,7 @@ aihe. Myös teoria RSA:n taustalla kiinnostaa todisteluun siitä että RSA:n tur
 on kiinni isojen lukujen faktorisoinnin kanssa. Eli lukujen faktorointtin ei ole 
 olemassa tehokkasta algoritmiä.
 
-# Toteutus
+### Toteutus
 
 Toteutus aloitettiin Python (3) -kielen toteutuksen parissa. Identifioitiin siis ongelma-
 kohtia toteutuksessa. Vastaan tuli aiheita kuten lukujen primarility, eli numeroiden
@@ -28,21 +32,21 @@ salauksen nopeus. Eli softa tekee tiedostoni, jossa on ensin otsikkotietueena AE
 RSA:n hitaus on huomattava niin vain AES -avain kryptataan ja AES -salattu data tulee
 RSA-salatun AES -salasanan perään.
 
-# Lessons learned
+### Lessons learned
 
 Tällä viikolla opin että Pythonin ** operaattori on tuskallisen hidas verrattuna 
 sisäänrakennetun pow() -funktioon verrattuna.
 
-# Edistysaskeleet
+### Edistysaskeleet
 
 Softa osaa tehdä avainparit, ja salata dataa, ja purkaa sitä annettulla avaimella.
 
-# Epäselvyyksiä
+### Epäselvyyksiä
 
 Ei mitään raportoitavia epäselvyyksiä. Kävimme läpi Hannu Kärnan kanssa ohjelmistoa
 ja päädyimme sopivaan laajuuteen ja ns. scopeen joka softalla on.
 
-# Mitä teen seuraavaksi
+### Mitä teen seuraavaksi
 Tarkoituksena on tehdä loppuun asti asiat jotka liityvät salaus-ympäristön kokoamiseen.
 Tarvitaan toimivat softat jotka tekevät mitä on tarkoitus tehdä:
         o avainparin generointi
@@ -50,3 +54,32 @@ Tarvitaan toimivat softat jotka tekevät mitä on tarkoitus tehdä:
         o purkaminen
 Nämä kolme annettuna on mahdollista laajentaa asioita huomattavasti.
 
+
+## 13..11.2021
+
+### Edistys tällä viikolla
+
+Toteutettiin unittestit Pythonin unittest -Python -standaardikirjaston parissa.
+Toteutettiin kolme testi-tapausta RSA -moduuliin liittyen. Eli ensimmäinen tarkistaa
+onko generoitu luku alkuluku. Toinen tarkistaa onko ketju:
+	* p = rsa.Prime(...).gen_prime()
+	* q = rsa.Prime(...).gen_prime()
+	* Avainpari: ((e,n), (d,m)) = rsa.gen_keypair(p, q)
+	* cleartext = "hello world"
+	* ciphertext = rsa.encrypt((e,n), cleartext)
+	* uusiclear = rsa.decrypt((d,m), ciphertext)
+	* Onko: uusclear == cleartext
+Eli jokaista ajoa varten kehitetään kaksi 1024 -bittisiä alkulukuja joita käytetään
+testaamiseen. Avaimen koko on siis parametrisoitu koodissa, ja 2048 -bittinen
+alkulukupari kestää 90 sekunttia laskea tehokkaalla XEON -koneella.
+
+### Ohjelman edistus
+
+Eli kirjoitettiin tällä viikolla myös AES -stubi.
+
+### Opitut asiat
+
+Testicaset tehdään pienillä alkuluvuilla koska isot sellaiset kestävät kauan
+generoida. Havaittiin että ** -operaattorin tehokkuus on suurinpiirtein pow()
+-metoodin tasoinen. Tultiin lopputulokseen että RSA -salaus tuottaa suuria
+arvoja salattuja tavuja. Suuria tarkoittaa siis

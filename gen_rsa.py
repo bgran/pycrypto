@@ -3,7 +3,7 @@
 
 import sys, os
 
-import rsa
+import rsa, cruft
 
 def usage():
 	print ("Usage: {} -i inputfile -o outputfile".format(sys.argv[0]))
@@ -37,10 +37,12 @@ def crypto_test():
 
 def main():
 	
-	print("Enter PYCRYPTO filename: ",end="")
-
+	#print("Enter PYCRYPTO filename: ",end="")
+	defa = os.path.join(cruft.get_key_dir(), "key")
 	#foo = "avain"
-	foo = input("> ")
+	foo = input("Enter key file name (default is {})> ".format(defa))
+	if foo == "":
+		assert(0)
 	data = None
 	#if foo == "avain":
 	#	os.unlink("avain")#

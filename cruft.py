@@ -7,9 +7,15 @@ import sys,os
 def get_key_dir():
 	rv = ""
 	env = os.environ
-	if not env.has_key("PYCRYPTO_KEYS"):	
+	if not "PYCRYPTO_KEYS" in env:
+		#if not env.has_key("PYCRYPTO_KEYS"):	
+		rv = os.path.join(env["HOME"], ".pycrypto")
+		if not os.path.exists(rv):
+			os.mkdir(rv)
+		return rv
 	else:
-		hd = env.has_key("HOME")
+		hd = "HOME" in env
+		#hd = env.has_key("HOME")
 		if not hd:
 			print("This is unaccetable")
 			sys.exit(1)
@@ -26,8 +32,8 @@ def get_keypair():
 		sys.exit(1)
 	try:
 		fd = open(env["PYCRYPTO_KEYS"], "r")
-	except IOError, e:
-		print ("Couldn't open {} for reading".format(env["PYCRYPTO_KEYS"))
+	except IOError:
+		print ("Couldn't open {} for reading".format(env["PYCRYPTO_KEYS"]))
 		sys.exit(1)
 	data = fd.read()
 
