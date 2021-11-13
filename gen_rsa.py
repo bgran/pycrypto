@@ -42,7 +42,7 @@ def main():
 	#foo = "avain"
 	foo = input("Enter key file name (default is {})> ".format(defa))
 	if foo == "":
-		assert(0)
+		foo = defa
 	data = None
 	#if foo == "avain":
 	#	os.unlink("avain")#
