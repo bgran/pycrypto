@@ -49,9 +49,9 @@ ja päädyimme sopivaan laajuuteen ja ns. scopeen joka softalla on.
 ### Mitä teen seuraavaksi
 Tarkoituksena on tehdä loppuun asti asiat jotka liityvät salaus-ympäristön kokoamiseen.
 Tarvitaan toimivat softat jotka tekevät mitä on tarkoitus tehdä:
-        o avainparin generointi
-        o salaus
-        o purkaminen
+        1. avainparin generointi
+        2. salaus
+        3. purkaminen
 Nämä kolme annettuna on mahdollista laajentaa asioita huomattavasti.
 
 
@@ -62,13 +62,13 @@ Nämä kolme annettuna on mahdollista laajentaa asioita huomattavasti.
 Toteutettiin unittestit Pythonin unittest -Python -standaardikirjaston parissa.
 Toteutettiin kolme testi-tapausta RSA -moduuliin liittyen. Eli ensimmäinen tarkistaa
 onko generoitu luku alkuluku. Toinen tarkistaa onko ketju:
-	* p = rsa.Prime(...).gen_prime()
-	* q = rsa.Prime(...).gen_prime()
-	* Avainpari: ((e,n), (d,m)) = rsa.gen_keypair(p, q)
-	* cleartext = "hello world"
-	* ciphertext = rsa.encrypt((e,n), cleartext)
-	* uusiclear = rsa.decrypt((d,m), ciphertext)
-	* Onko: uusclear == cleartext
+	1. p = rsa.Prime(...).gen_prime()
+	2. q = rsa.Prime(...).gen_prime()
+	3. Avainpari: ((e,n), (d,m)) = rsa.gen_keypair(p, q)
+	4. cleartext = "hello world"
+	5. ciphertext = rsa.encrypt((e,n), cleartext)
+	6. uusiclear = rsa.decrypt((d,m), ciphertext)
+	7. Onko: uusclear == cleartext
 Eli jokaista ajoa varten kehitetään kaksi 1024 -bittisiä alkulukuja joita käytetään
 testaamiseen. Avaimen koko on siis parametrisoitu koodissa, ja 2048 -bittinen
 alkulukupari kestää 90 sekunttia laskea tehokkaalla XEON -koneella.
