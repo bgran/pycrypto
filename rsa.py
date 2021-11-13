@@ -114,7 +114,7 @@ class Prime:
 
 				pi -= 1
 				if pi == 0:
-					self.print_iter(".")
+					#self.print_iter(".")
 					pi = 100
 
 				#print("div: {}".format(div))
@@ -216,6 +216,10 @@ def marshall_key(tup):
 
 	#print ("marshall_keys: t1: {}".format(t1))
 	return (t1, t2)
+def gen_keypair_internal():
+	p,_ = Prime(RSA_bits, RM_iterations).gen_prime()
+	q,_ = Prime(RSA_bits, RM_iterations).gen_prime()
+	
 def gen_keypair():
 	p,_ = Prime(RSA_bits, RM_iterations).gen_prime()
 	q,_ = Prime(RSA_bits, RM_iterations).gen_prime()
@@ -226,8 +230,14 @@ def gen_keypair():
 	
 def encrypt(pk, pt):
 	key, n = pk
+	# XXX: Ugly hack since too much mangling of data around
+	key = int(key)
+	n = int(n)
 	#print("KALAA: {}".format(type(pt)))
 	#print("pt koko: {}".format(len(pt)))
+	#print("pt: {}".format(pt))
+	#print("key: {}".format(key))
+	#print("n: {}".format(n))
 	#print("key koko: {}".format(key))
 	#cipher = [(ord(c) ** key) % n for c in pt]
 	#cipher = int(pow(ord(c), key, n
@@ -236,6 +246,9 @@ def encrypt(pk, pt):
 
 def decrypt(pk, ct):
 	key, n = pk
+	# XXX: Ugly hack since too much magnling of data around
+	key = int(key)
+	n = int(n)
 	#cleartext = [chr((c ** key) % n) for c in ct]
 	cleartext = [chr(pow(c, key, n)) for c in ct]
 	return "".join(cleartext)

@@ -9,10 +9,12 @@ def usage():
 	print ("Usage: {} -i inputfile -o outputfile".format(sys.argv[0]))
 	print ("Will output a RSA keypair to $HOME/.pycrypto..")
 
-def test(p, q):
+#def test(p, q):
+def test():
 	cleartext = "hello world"
 	#print("test with {}".format(cleartext))
-	((e,n), (d,m)) = rsa.gen_keypair(p, q)
+	#((e,n), (d,m)) = rsa.gen_keypair(p, q)
+	((e,n), (d,m)) = rsa.gen_keypair()
 
 	#print("encrypting: {}".format(cleartext))
 	ct = rsa.encrypt((e,n), cleartext)
@@ -32,7 +34,8 @@ def crypto_test():
 	p2 = rsa.Prime(1024, 1000)
 	q,_ = p2.gen_prime()
 
-	test(p, q)
+	#return(test(p, q))
+	return (test())
 
 
 def main():
