@@ -82,4 +82,10 @@ Eli kirjoitettiin tällä viikolla myös AES -stubi.
 Testicaset tehdään pienillä alkuluvuilla koska isot sellaiset kestävät kauan
 generoida. Havaittiin että ** -operaattorin tehokkuus on suurinpiirtein pow()
 -metoodin tasoinen. Tultiin lopputulokseen että RSA -salaus tuottaa suuria
-arvoja salattuja tavuja. Suuria tarkoittaa siis
+arvoja salattuja tavuja. Suuria tarkoittaa siis isoja lukuja.
+
+### Mitä seuraavaksi?
+
+Ohjelmiston pitää toteuttaa vakaita kryptauksia, eli komentorivi-käyttöliittymä
+tulee toimia ilman ongelmia.
+
