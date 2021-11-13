@@ -7,6 +7,6 @@ Initial support for unit tests for rsa.py main opreations through
 the unittesti module that ships with Python. The command to run the
 tests are through:
 
-> make
+> make tests
 
 by using GNU Make.
