@@ -102,3 +102,46 @@ Miten tuntikirjanpito toimii projektissa?
 Ohjelmiston pitää toteuttaa vakaita kryptauksia, eli komentorivi-käyttöliittymä
 tulee toimia ilman ongelmia.
 
+
+## 20.11.2021
+
+Aikaa käytetty projektiin: 10 tuntia
+
+### Edistys tällä viikolla
+
+Toteutettiin vakaa salaus ja salauksen purkaminen tiedostojärjestelmästä haetuilla
+avaintietueilla. Toteutettiin myös alkuosa AES -datan enkryptaamisesta.
+
+### Opitut asiat
+
+RSA toimii harvinaisen huonosti jos lukuarvoilla algoritmissä on jotain epämääräistä
+kuten bitin heitto väärän suuntaan. Todettiin että paras tapa havaita hyökkäys
+salausta vastaan jos softa kuolee OverflowError -poikkeukseen.
+
+Epävaliidin avainparin käyttö siis ei tulkita missään vaiheessa, vaan softa kuolee nopeasti
+jos sille yritetään antaa vääriä avaimia.
+
+### Epäselviä asioita
+
+Virhekäsittely on avoinna vielä. Eli pitääkö olla joku määritelty palautusarvo prosessin
+exitoinnista eri operaatioille? Vai sopiiko että käyttää vain yhtä arvoa eli 1, joka on
+erimpi kuin 0.
+
+Tiedosto-järjestelmään kirjoitettava salattu viesti toimii aes.py:ssä määrittelyillä
+delimitoreiden kanssa, eli RSA -salatut asia ovat ensin paketissa. Eli AES-enkryptaatio
+voisi toimia jonkinlaisella PGP:stä tutulla armored ascii -toteutuksella. Myös analyyttinen
+hyökkäys softaa vastaan on siis RSA:n ns. ECB, eli Electronic Code Book -tapainen
+lähestymistapa koodaattuun AES -salaisuuteen on todellinen, koska mitään suojausta ei ole
+toteutettu. Pitää katsoa mitä ja miten PGP tekee asiaan, eli miten estää datan
+vuoto suoraan itse salatusta RSA-datasta, jossa annettu salaisuus F(X) on sama kuin
+F(Y) jos X = Y. Tämä on hankala asia. Myös suurempien avainten kanssa RSA -salauksen
+koko on aika iso. En tiedä mitä asialle voi tehdä.
+
+### Mitä seuraavaksi?
+
+Pitää toteuttaa kattava Unit testit. Myös laitettava softa toimimaan siten että se
+ei kirjoita yli tiedostoja ennenkuin se on saanut jotain laitettavaa niihiin. Eli
+tiedostot kirjoitetaan vasta kun operaatiota ovat tehtyjä ja ne ovat toimivia. Myös
+AES -kryptauksen dekryptausoperaatio pitää toimia hyvin tai ainakin oikein.
+
+
