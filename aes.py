@@ -2,13 +2,6 @@
 
 import sys
 
-#if __name__ != "__main__":
-#	print("Usage: {} encrypted cleartext".format(sys.argv[0]))
-#	sys.exit(1)
-#if len(sys.argv) != 3:
-#	print("Usage: {} encrypted cleartext".format(sys.argv[0]))
-#	sys.exit(1)
-
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 
@@ -24,7 +17,6 @@ def __decrypt(infile, outfile, key):
 
 def __encrypt(infile, outfile, key):
 	data = infile.read()
-	print(type(key))
 	cipher = AES.new(key, AES.MODE_EAX)
 	ciphertext, tag = cipher.encrypt_and_digest(data)
 	[ outfile.write(x) for x in (cipher.nonce, tag, ciphertext) ]
@@ -86,10 +78,6 @@ class AES_Container():
 
 		self.content = data
 	
-		#mod = len(self.content) % 16
-		#foo = len(self.content) / 16
-		#bar = int( foo * 16)
-
 		if op == AES_OP_encrypt:
 			length = 16 - (len(self.content) % 16)
 			self.content += bytes([length])*length
@@ -108,13 +96,10 @@ class AES_Container():
 		r = b''
 		for i in lst:
 			r += bytes(chr(i))
-			print("r: {}".format(i))
 		return r
 		rv = []
 		for l in lst:
 			rv.append(chr(l))
-		print("__conv_aes: {}". format(rv))
-		#assert 0
 		return bytes("".join(rv), 'utf-8')
 	def __conv_rsa(self, rv):
 		return rv
@@ -128,20 +113,17 @@ class AES_Container():
 			#aes_sec = self.__conv_aes(rsa_sec)
 			ci = AES.new(aes_sec, AES.MODE_CBC)
 
-			
-			#self.aes_nonce = ci.nonce
 			self.aes_key = aes_sec
 
+			# 128-bits
 			assert len(self.aes_key) == 16
 
 			self.aes_ciphertext = ci.encrypt(self.content)
-			print("self.aes_ciphertext: {}".format(self.aes_ciphertext))
 		elif self.op == AES_OP_decrypt:
 			aes_sec = self.aes_key
 			ci = AES.new(aes_sec, AES.MODE_CBC)
 			#self.aes_cleartext = ci.decrypt(self.aes_ciphertext)
 			self.aes_cleartext = ci.decrypt(self.content)
-			print("self.aes_cleartext: {}".format(self.aes_cleartext))
 		else:
 			assert 0
 

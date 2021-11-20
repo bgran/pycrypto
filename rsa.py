@@ -54,7 +54,6 @@ class Prime:
 
 	def __init__(self, prime_bits, low_prime_list):
 		self.first_primes = Prime_Gen(low_prime_list).gen()
-		#print(list(self.first_primes))
 		self.bits = prime_bits
 		self.msb = prime_bits
 	def __set_bit(self, num):
@@ -68,29 +67,19 @@ class Prime:
 		pc = (1 <<msb)
 	def try_rabinmiller(self, pc, iterations):
 		'''Run Rabin-Miller primality test.'''
-		#print("Entering with pc: {} iterations: {}".format(pc, iterations))
-		pause()
 		md2 = 0
 		ec = pc - 1
-		t1 = ptime()
 
-		#print("ec: {}".format(ec))
 		while ec % 2 == 0:
-			#print ("RM: ec: {}".format(ec))
 			ec >>= 1
 			md2 += 1
 		assert(((2**md2) * ec) == pc-1) 
-		#print("ec after: {}".format(ec))
 
-
-		pi = 100
 
 		def try_composite(rt):
-			#print("try_composite(): {}".format(rt))
 			if pow(rt, ec, pc) == 1:
 				return False
 			for i in range(md2):
-				#if pow(rt, 2**i * ec, pc) == pc - 1:
 				if pow(rt, pow(2, i) * ec, pc) == pc - 1:
 					return False
 			return True
@@ -99,49 +88,26 @@ class Prime:
 			round_tester = random.randrange(2,
 				pc)
 			b1 = try_composite(round_tester)
-			pi -= 1
-			if pi == 0:
-				pi = 100
-				self.print_iter("*")
 			if b1: 
 				return False
-		t2 = ptime()
-		#print("Rabin-Miller (True) lasted: {} seconds".format(t2-t1))
 		return True
 		
 	def __try_helper(self, pc, div):
 		if pc %div == 0:
-			#print("{} / {} pc % div on nolla eli pc ei ole alkuluku".format(pc, div))
 			return False
 		else:
-			#print("pc voi olla alkuluku")
 			return True
 	def try_number_low(self):
 		is_prob_prime = False
 		pc = 0
 
-		pi = 100
 		while True:
-			#pi -= 1
-			#if pi == 0:
-			#	self.print_iter(".")
-			#	pi = 100
-
 			pc = self.__n_bitrand(self.bits)
 			if pc % 2 == 0:
 				continue
 
 			pc = self.__set_bit(pc)
-			#print("pc: {}".format(pc))
 			for div in self.first_primes:
-
-				pi -= 1
-				if pi == 0:
-					#self.print_iter(".")
-					pi = 100
-
-				#print("div: {}".format(div))
-
 				if self.__try_helper(pc, div):
 					pass
 				else:
@@ -215,8 +181,6 @@ def multiplicative_inverse(e, phi):
 
 
 def __gen_keypair(p, q):
-	#print("type: p: {}".format(type(p)))
-	#print("type: q: {}".format(type(q)))
 	n = p * q
 	phi = (p-1) * (q-1)
 	e = random.randrange(1, phi)
@@ -226,18 +190,11 @@ def __gen_keypair(p, q):
 		e = random.randrange(1, phi)
 		gcd = GCD(e, phi)
 	
-	#e = float(e)
-	#phi = float(phi)
 	d = multiplicative_inverse(e, phi)
 	return ((e, n), (d, n))
 def marshall_key(tup):
 	t1 = str(tup[0])
 	t2 = str(tup[1])
-	#foo = \
-	#	(t1.to_bytes(int(t1.bit_length()/8),byteorder='big'),
-	#	 t2.to_bytes(int(t2.bit_length()/8),byteorder='big'))
-
-	#print ("marshall_keys: t1: {}".format(t1))
 	return (t1, t2)
 def gen_keypair_internal():
 	p,_ = Prime(RSA_bits, RM_iterations).gen_prime()
@@ -256,14 +213,6 @@ def encrypt(pk, pt):
 	# XXX: Ugly hack since too much mangling of data around
 	key = int(key)
 	n = int(n)
-	print("KALAA: {}".format(type(pt)))
-	print("pt koko: {}".format(len(pt)))
-	print("pt: {}".format(pt))
-	#print("key: {}".format(key))
-	#print("n: {}".format(n))
-	#print("key koko: {}".format(key))
-	#cipher = [(ord(c) ** key) % n for c in pt]
-	#cipher = int(pow(ord(c), key, n
 	cipher = [pow(ord(c), key, n) for c in pt]
 	assert 0
 	return cipher
@@ -271,58 +220,24 @@ def enc_str(pk, pt):
 	key, n = pk
 	key = int (key)
 	n = int(n)
-	print("pt: {}".format(pt))
-	#pt = int(pt, 10)
-	#assert 0
-	#cipher = [pow(ord(c), key, n) for c in str(pt)]
-	i = 0
 	cipher = []
 	for c in pt:
-		print("HELVETTI: {}".format(c))
-		print("HAKAKLAL: {}".format(type(c)))
 		c = chr(c)
 		v = pow(ord(c), key, n)
-		print("LASKE: c: {}".format(ord(c)))
-		print("LASKE: key: {}".format(key))
-		print("LASKE: n: {}".format(n))
-		#assert 0
-		print("HAUKI: v: {}: {}: {}".format(i, c, v)) 
 		i += 1
 		cipher.append(v)
-	print("len: {} cipher: {}".format(len(cipher), cipher))
 	return cipher
 
 def decrypt(pk, ct):
 	key, n = pk
 	# XXX: Ugly hack since too much magnling of data around
-	#if type(key) is not type(2):
 	key = int(key)
-	#if  type(n) is not type(2):
 	n = int(n)
-	print("HAUKKIFIFIIF: key: {}".format(key))
-	print("FODOPODPOPOD: n: {}".format(n))
-	#cleartext = [chr((c ** key) % n) for c in ct]
-	#####ct = ct[1:-1]
-	print("JHAAIAIA: {}".format(ct))
 	#cleartext = [chr(pow(c, key, n)) for c in ct]
 	cleartext = []
 	for ct_byte in ct:
-		#ct_byte = ct_byte[2:-1]
-		print ("CT: {}".format(ct_byte))
-		print("ct_byte: {}".format(type(ct_byte)))
-		#if ct_byte is not instanceof(int):
-		#	ct_byte = int(ct_byte, 10)
-		#print("ct_byte: {}".format(ct_byte))
 		ct_byte = int(ct_byte, 10)
-		#chr(pow(ct_byte, key, n))
-		#cleartext.append(chr(pow(ct_byte, key, n)))
-		#cleartext.append(pow(ct_byte, key, n))
-		print("LASKE: ct_byte: {}".format(ct_byte))
-		print("LASKE: key: {}".format(key))
-		print("LASKE: n: {}".format(n))
 		cleartext.append(chr(pow(ct_byte, key, n)))
-		#chr(ct_byte)
-	print("decrypt kalat: {}".format( cleartext))
 	return "".join(cleartext)
 
 #
@@ -347,10 +262,6 @@ class RSA_Container():
 		# line2 is now the stuff
 		line3 = mdata[2]
 		line4 = mdata[3:]
-		print("line1: {}".format(line1))
-		print("line2: {}".format(line2))
-		print("line3: {}".format(line3))
-		print("line4: {}".format(line4))
 		
 		line2 = line2[1:]
 		line2 = line2[:-1]
@@ -364,7 +275,6 @@ class RSA_Container():
 			self.encrypted_data = None
 
 			data = self.ifp.read()
-			print ("OP_encrypt: data: {}".format(data))
 
 			ci = aes.AES_Container(data, aes.AES_OP_encrypt)
 			self.ci = ci
@@ -372,17 +282,14 @@ class RSA_Container():
 			
 			self.encrypted_key = enc_str(self.keys, ci.aes_key)
 			#self.encrypted_key = encrypt(self.keys, ci.aes_key)
-
 			#self.encrytped_nonce = encrypt(self.keys, ci.aes_nonce)
 		elif self.op == OP_decrypt:
 			data = self.ifp.read()
-			print("OP_decrypt: data: {}".format(data))
 			# parse file:
 			self.data = data
 			
 			(rsa_encrypted, aes_encrypted) = self.__extract_parts(data)
 			plaintext = decrypt(self.keys, rsa_encrypted)
-			print("plaintext: {}".format(plaintext))
 			
 			ci = aes.AES_Container(aes_encrypted, aes.AES_OP_decrypt)
 			ci.aes_key = bytes(plaintext, "utf-8")
@@ -397,11 +304,6 @@ class RSA_Container():
 	def flush_dec(self):
 		self.ofp.write(self.container.aes_cleartext)
 	def flush_enc(self):
-		print("self.encrypted_key: {}".format(self.encrypted_key))
-		print("kala1: {}".format(len(self.encrypted_key)))
-		#print("self.encrypted_data: {}".format(self.encrypted_data))
-		#self.ofp.write(self.encrypted_key+"\n"+self.encrypted_data)
-		
 		# Header:
 		self.ofp.write(RSA_Format_key_1)
 		self.ofp.write(bytes(str(self.encrypted_key)+"\n", "utf-8"))

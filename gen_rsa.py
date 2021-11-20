@@ -111,13 +111,7 @@ def main():
 	else:
 		inf = open(infile, "br")
 	
-	
-
-
-	
 	crypto_test()
-
-	
 
 if __name__ == "__main__":
 	main()

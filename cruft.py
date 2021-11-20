@@ -8,14 +8,12 @@ def get_key_dir():
 	rv = ""
 	env = os.environ
 	if not "PYCRYPTO_KEYS" in env:
-		#if not env.has_key("PYCRYPTO_KEYS"):	
 		rv = os.path.join(env["HOME"], ".pycrypto")
 		if not os.path.exists(rv):
 			os.mkdir(rv)
 		return rv
 	else:
 		hd = "HOME" in env
-		#hd = env.has_key("HOME")
 		if not hd:
 			print("This is unaccetable")
 			sys.exit(1)
@@ -24,7 +22,7 @@ def get_key_dir():
 		else: os.mkdir(rv)
 	return rv
 
-def get_keypair():
+def __bork_get_keypair():
 	env = os.environ
 	fd = None
 	if not env.has_key("PYCRYPTO_KEYS"):
@@ -46,7 +44,6 @@ def read_priv_key():
 	(e, n) = d.split(bytes("\n", "utf-8"))
 	e = int(e)
 	n = int(n)
-	#print("read_priv_key: e: {} n: {}".format(e, n))
 	return (e, n)
 def read_pub_key():
 	d = None
@@ -57,7 +54,6 @@ def read_pub_key():
 	(d, n) = d.split(bytes("\n", 'utf-8'))
 	d = int(d)
 	n = int(n)
-	#print("read_pub_key: e: {} n: {}".format(d, n))
 	return (d, n)
 
 
