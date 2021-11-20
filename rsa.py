@@ -8,8 +8,19 @@ import random
 import time
 from time import time as ptime
 
+
+import aes
+
 RSA_bits = 1024
 RM_iterations = 20
+
+OP_decrypt = 1
+OP_encrypt = 2
+
+
+RSA_Format_key_1 = b"--------RSA Encrypted Data--------\n"
+RSA_Format_key_2 = b"--------RSA Encrypted Data Ends--------\n"
+
 
 def pause():
 	time.sleep(0.0)
@@ -42,9 +53,19 @@ class Prime:
 	real test is the Rabin-Miller primality test."""
 
 	def __init__(self, prime_bits, low_prime_list):
-		self.first_primes= Prime_Gen(low_prime_list).gen()
+		self.first_primes = Prime_Gen(low_prime_list).gen()
 		#print(list(self.first_primes))
 		self.bits = prime_bits
+		self.msb = prime_bits
+	def __set_bit(self, num):
+		return num
+		if num == 0: return 0
+		msb = 0
+		n = int(n/2)
+		while(n > 0):
+			n = int(n/2)
+			msb += 1
+		pc = (1 <<msb)
 	def try_rabinmiller(self, pc, iterations):
 		'''Run Rabin-Miller primality test.'''
 		#print("Entering with pc: {} iterations: {}".format(pc, iterations))
@@ -109,6 +130,8 @@ class Prime:
 			pc = self.__n_bitrand(self.bits)
 			if pc % 2 == 0:
 				continue
+
+			pc = self.__set_bit(pc)
 			#print("pc: {}".format(pc))
 			for div in self.first_primes:
 
@@ -131,6 +154,7 @@ class Prime:
 		
 	def __n_bitrand(self, n):
 		v = random.randrange(2**(n-1)+1, 2**n-1)
+		
 		return v
 	def __print_iter(self, ch):
 		return
@@ -152,7 +176,6 @@ class Prime:
 				continue
 		assert 0
 	
-
 class RSA_key:
 	def __init__(self):
 		pass
@@ -233,15 +256,35 @@ def encrypt(pk, pt):
 	# XXX: Ugly hack since too much mangling of data around
 	key = int(key)
 	n = int(n)
-	#print("KALAA: {}".format(type(pt)))
-	#print("pt koko: {}".format(len(pt)))
-	#print("pt: {}".format(pt))
+	print("KALAA: {}".format(type(pt)))
+	print("pt koko: {}".format(len(pt)))
+	print("pt: {}".format(pt))
 	#print("key: {}".format(key))
 	#print("n: {}".format(n))
 	#print("key koko: {}".format(key))
 	#cipher = [(ord(c) ** key) % n for c in pt]
 	#cipher = int(pow(ord(c), key, n
 	cipher = [pow(ord(c), key, n) for c in pt]
+	return cipher
+def enc_str(pk, pt):
+	key, n = pk
+	key = int (key)
+	n = int(n)
+	print("pt: {}".format(pt))
+	#pt = int(pt, 10)
+	#assert 0
+	#cipher = [pow(ord(c), key, n) for c in str(pt)]
+	i = 0
+	cipher = []
+	for c in pt:
+		print("HELVETTI: {}".format(c))
+		print("HAKAKLAL: {}".format(type(c)))
+		c = chr(c)
+		v = pow(ord(c), key, n)
+		print("HAUKI: v: {}: {}: {}".format(i, c, v)) 
+		i += 1
+		cipher.append(v)
+	print("len: {} cipher: {}".format(len(cipher), cipher))
 	return cipher
 
 def decrypt(pk, ct):
@@ -252,6 +295,51 @@ def decrypt(pk, ct):
 	#cleartext = [chr((c ** key) % n) for c in ct]
 	cleartext = [chr(pow(c, key, n)) for c in ct]
 	return "".join(cleartext)
+
+#
+# RSA_Container ctor takes an argument called op which
+# is defined as an encrypt or decrypt operation.
+#
+class RSA_Container():
+	def __init__(self, tup_keys, op, ifp, ofp):
+		self.keys = tup_keys
+		self.op = op
+		self.ifp = ifp
+		self.ofp = ofp
+
+		self.ci = None
+	def do_it(self):
+		if self.op == OP_encrypt:
+			self.encrypted_key = None
+			self.encrypted_data = None
+
+			data = self.ifp.read()
+			print ("OP_encrypt: data: {}".format(data))
+
+			ci = aes.AES_Container(data, aes.AES_OP_encrypt)
+			self.ci = ci
+			ci.do_it()
+			
+			self.encrypted_key = enc_str(self.keys, ci.aes_key)
+			#self.encrypted_key = encrypt(self.keys, ci.aes_key)
+
+			#self.encrytped_nonce = encrypt(self.keys, ci.aes_nonce)
+		elif self.op == OP_decrypt:
+			data = self.ifp.read()
+			print("OP_decrypt: data: {}".format(data))
+				
+		#assert 0
+	def flush_enc(self):
+		print("self.encrypted_key: {}".format(self.encrypted_key))
+		print("kala1: {}".format(len(self.encrypted_key)))
+		#print("self.encrypted_data: {}".format(self.encrypted_data))
+		#self.ofp.write(self.encrypted_key+"\n"+self.encrypted_data)
+		
+		# Header:
+		self.ofp.write(RSA_Format_key_1)
+		self.ofp.write(bytes(str(self.encrypted_key)+"\n", "utf-8"))
+		self.ofp.write(RSA_Format_key_2)
+		self.ofp.write(self.ci.aes_ciphertext)
 
 def main():
 	"""p2 = Prime(1024, 100)

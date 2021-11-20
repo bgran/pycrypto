@@ -42,16 +42,22 @@ def read_priv_key():
 	path = get_key_dir()
 	rfile = os.path.join(path, "key")
 	with open(rfile, "rb") as f:
-		d = f.read()
-	(e, n) = d.split("\n")
+		d = bytes(f.read())
+	(e, n) = d.split(bytes("\n", "utf-8"))
+	e = int(e)
+	n = int(n)
+	#print("read_priv_key: e: {} n: {}".format(e, n))
 	return (e, n)
 def read_pub_key():
 	d = None
 	path = get_key_dir()
 	rfile = os.path.join(path, "key.pub")
 	with open(rfile, "rb") as f:
-		d = f.read()
-	(d, n) = d.split("\n")
+		d = bytes(f.read())
+	(d, n) = d.split(bytes("\n", 'utf-8'))
+	d = int(d)
+	n = int(n)
+	#print("read_pub_key: e: {} n: {}".format(d, n))
 	return (d, n)
 
 
