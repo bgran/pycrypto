@@ -65,8 +65,6 @@ def main():
 		
 	e, n = cruft.read_pub_key()
 	
-	print("ENC: e: {}".format(e))
-	print("ENC: n: {}".format(n))
 	rsa_container = rsa.RSA_Container((e, n), rsa.OP_encrypt, ifp, ofp)
 	rsa_container.do_it()
 	rsa_container.flush_enc()
