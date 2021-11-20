@@ -4,7 +4,6 @@ if __name__ != "__main__":
 	import sys
 	print("This is a program, not a module")
 	sys.exit(1)
-	
 
 import cruft
 import sys

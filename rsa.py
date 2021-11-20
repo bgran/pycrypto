@@ -265,6 +265,7 @@ def encrypt(pk, pt):
 	#cipher = [(ord(c) ** key) % n for c in pt]
 	#cipher = int(pow(ord(c), key, n
 	cipher = [pow(ord(c), key, n) for c in pt]
+	assert 0
 	return cipher
 def enc_str(pk, pt):
 	key, n = pk
@@ -281,6 +282,10 @@ def enc_str(pk, pt):
 		print("HAKAKLAL: {}".format(type(c)))
 		c = chr(c)
 		v = pow(ord(c), key, n)
+		print("LASKE: c: {}".format(ord(c)))
+		print("LASKE: key: {}".format(key))
+		print("LASKE: n: {}".format(n))
+		#assert 0
 		print("HAUKI: v: {}: {}: {}".format(i, c, v)) 
 		i += 1
 		cipher.append(v)
@@ -290,10 +295,34 @@ def enc_str(pk, pt):
 def decrypt(pk, ct):
 	key, n = pk
 	# XXX: Ugly hack since too much magnling of data around
+	#if type(key) is not type(2):
 	key = int(key)
+	#if  type(n) is not type(2):
 	n = int(n)
+	print("HAUKKIFIFIIF: key: {}".format(key))
+	print("FODOPODPOPOD: n: {}".format(n))
 	#cleartext = [chr((c ** key) % n) for c in ct]
-	cleartext = [chr(pow(c, key, n)) for c in ct]
+	#####ct = ct[1:-1]
+	print("JHAAIAIA: {}".format(ct))
+	#cleartext = [chr(pow(c, key, n)) for c in ct]
+	cleartext = []
+	for ct_byte in ct:
+		#ct_byte = ct_byte[2:-1]
+		print ("CT: {}".format(ct_byte))
+		print("ct_byte: {}".format(type(ct_byte)))
+		#if ct_byte is not instanceof(int):
+		#	ct_byte = int(ct_byte, 10)
+		#print("ct_byte: {}".format(ct_byte))
+		ct_byte = int(ct_byte, 10)
+		#chr(pow(ct_byte, key, n))
+		#cleartext.append(chr(pow(ct_byte, key, n)))
+		#cleartext.append(pow(ct_byte, key, n))
+		print("LASKE: ct_byte: {}".format(ct_byte))
+		print("LASKE: key: {}".format(key))
+		print("LASKE: n: {}".format(n))
+		cleartext.append(chr(pow(ct_byte, key, n)))
+		#chr(ct_byte)
+	print("decrypt kalat: {}".format( cleartext))
 	return "".join(cleartext)
 
 #
@@ -308,6 +337,27 @@ class RSA_Container():
 		self.ofp = ofp
 
 		self.ci = None
+	def __extract_parts(self, data):
+		"""Returns RSA encrypted data and AES data."""
+		mdata = data.split(bytes("\n", "utf-8"))
+		mdata = list(filter(lambda x:not not x, mdata))
+		# Whatever...
+		line1 = mdata[0]
+		line2 = mdata[1]
+		# line2 is now the stuff
+		line3 = mdata[2]
+		line4 = mdata[3:]
+		print("line1: {}".format(line1))
+		print("line2: {}".format(line2))
+		print("line3: {}".format(line3))
+		print("line4: {}".format(line4))
+		
+		line2 = line2[1:]
+		line2 = line2[:-1]
+		tbl = line2.split(bytes(", ", "utf-8"))
+
+		return (tbl, line4)
+		
 	def do_it(self):
 		if self.op == OP_encrypt:
 			self.encrypted_key = None
@@ -327,7 +377,14 @@ class RSA_Container():
 		elif self.op == OP_decrypt:
 			data = self.ifp.read()
 			print("OP_decrypt: data: {}".format(data))
-				
+			# parse file:
+			self.data = data
+			
+			(rsa_encrypted, aes_encrypted) = self.__extract_parts(data)
+			plaintext = decrypt(self.keys, rsa_encrypted)
+			print("plaintext: {}".format(plaintext))
+			
+			ci = aes.AES_Container
 		#assert 0
 	def flush_enc(self):
 		print("self.encrypted_key: {}".format(self.encrypted_key))
