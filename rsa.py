@@ -384,8 +384,18 @@ class RSA_Container():
 			plaintext = decrypt(self.keys, rsa_encrypted)
 			print("plaintext: {}".format(plaintext))
 			
-			ci = aes.AES_Container
-		#assert 0
+			ci = aes.AES_Container(aes_encrypted, aes.AES_OP_decrypt)
+			ci.aes_key = bytes(plaintext, "utf-8")
+			ci.aes_ciphertext = data
+			ci.do_it()
+			self.container = ci
+			aes_cleartext = ci.aes_cleartext
+		else:
+			assert 0
+			
+			
+	def flush_dec(self):
+		self.ofp.write(self.container.aes_cleartext)
 	def flush_enc(self):
 		print("self.encrypted_key: {}".format(self.encrypted_key))
 		print("kala1: {}".format(len(self.encrypted_key)))

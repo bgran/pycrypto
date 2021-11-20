@@ -83,7 +83,6 @@ class AES_Container():
 		self.aes_ciphertext = None
 		self.aes_cleartext = None
 		self.rsa_key = None
-		
 
 		self.content = data
 	
@@ -95,7 +94,8 @@ class AES_Container():
 			length = 16 - (len(self.content) % 16)
 			self.content += bytes([length])*length
 		elif op == AES_OP_decrypt:
-			pass
+			length = 16 - (len(self.content) % 16)
+			self.content += bytes([length])*length
 		else:
 			print("Bork bork")
 			sys.exit(1)
@@ -137,7 +137,12 @@ class AES_Container():
 			self.aes_ciphertext = ci.encrypt(self.content)
 			print("self.aes_ciphertext: {}".format(self.aes_ciphertext))
 		elif self.op == AES_OP_decrypt:
-			pass
-
+			aes_sec = self.aes_key
+			ci = AES.new(aes_sec, AES.MODE_CBC)
+			#self.aes_cleartext = ci.decrypt(self.aes_ciphertext)
+			self.aes_cleartext = ci.decrypt(self.content)
+			print("self.aes_cleartext: {}".format(self.aes_cleartext))
+		else:
+			assert 0
 
 # EOF

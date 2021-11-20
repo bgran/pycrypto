@@ -71,6 +71,7 @@ def main():
 	rsa_container = rsa.RSA_Container((d, n), rsa.OP_decrypt, ifp, ofp)
 	rsa_container.do_it()
 	#rsa_container.flush_enc()
+	rsa_container.flush_dec()
 
 if __name__ == "__main__":
 	main()
