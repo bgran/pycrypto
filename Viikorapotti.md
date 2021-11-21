@@ -133,8 +133,8 @@ voisi toimia jonkinlaisella PGP:stä tutulla armored ascii -toteutuksella. Myös
 hyökkäys softaa vastaan on siis RSA:n ns. ECB, eli Electronic Code Book -tapainen
 lähestymistapa koodaattuun AES -salaisuuteen on todellinen, koska mitään suojausta ei ole
 toteutettu. Pitää katsoa mitä ja miten PGP tekee asiaan, eli miten estää datan
-vuoto suoraan itse salatusta RSA-datasta, jossa annettu salaisuus F(X) on sama kuin
-F(Y) jos X = Y. Tämä on hankala asia. Myös suurempien avainten kanssa RSA -salauksen
+vuoto suoraan itse salatusta RSA-datasta, koska salaisuus on sama kaikille samoille merkeille.
+Tämä on hankala asia. Myös suurempien avainten kanssa RSA -salauksen
 koko on aika iso. En tiedä mitä asialle voi tehdä.
 
 ### Mitä seuraavaksi?
