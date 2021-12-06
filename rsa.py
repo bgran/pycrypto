@@ -238,7 +238,8 @@ def encrypt(pk, pt):
     key = int(key)
     n = int(n)
     cipher = [pow(ord(c), key, n) for c in pt]
-    assert 0
+    #### XXX bgran
+    #assert 0
     return cipher
 def enc_str(pk, pt):
     """encrypt string"""
@@ -262,7 +263,8 @@ def decrypt(pk, ct):
     #cleartext = [chr(pow(c, key, n)) for c in ct]
     cleartext = []
     for ct_byte in ct:
-        ct_byte = int(ct_byte, 10)
+        #print ("ct_byte: {}".format(ct_byte))
+        ct_byte = int(ct_byte) #, 10)
         cleartext.append(chr(pow(ct_byte, key, n)))
     return "".join(cleartext)
 
