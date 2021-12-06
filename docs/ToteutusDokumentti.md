@@ -4,7 +4,7 @@ Ohjenuora tehokkaan ja turvallisen datan enkoodamiseen ja dekoodaamiseen.
 
 ## Ohjelman yleisrakenne
 
-1.`gen_rsa.py`
+1. `gen_rsa.py`
 	- Luokka RSA -avainparin luomiseen
 	- Funktiot:
 		- `main`
