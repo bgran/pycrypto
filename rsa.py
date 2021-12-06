@@ -203,6 +203,7 @@ def gen_keypair_internal():
 def gen_keypair():
 	p,_ = Prime(RSA_bits, RM_iterations).gen_prime()
 	q,_ = Prime(RSA_bits, RM_iterations).gen_prime()
+	if p == q: assert 0
 	(priv_t, pub_t) = __gen_keypair(p, q)
 	(priv_e, priv_n) = marshall_key(priv_t)
 	(pub_d, pub_n) = marshall_key(pub_t)
