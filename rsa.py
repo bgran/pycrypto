@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
+"""Foobar"""
 #
 #
 
-import sys
+#import sys
 import random
 
 import time
-from time import time as ptime
+#from time import time as ptime
 
 
 import aes
@@ -23,29 +24,39 @@ RSA_Format_key_2 = b"--------RSA Encrypted Data Ends--------\n"
 
 
 def pause():
+    """Pause for a second"""
     time.sleep(0.0)
 class Prime_Gen:
     """Generate small primes."""
     def __init__(self, num):
+        """foofo"""
         self.num = num
-    def __is_prime(self, n):
-        if n == 1: return True
-        elif n == 2: return True
+        self.val = 3
+        self.tbl = []
+    def _is_prime(self, n):
+        """..."""
+        self.val = 4
+        if n in [1, 2]:
+            return True
         elif n %2 == 0:
             return False
+        else:
+            assert 0
+            return -1
         cl = range(3, n, 2)
         for div in cl:
             if n % div == 0:
                 return False
         return True
     def gen(self):
+        """..."""
         self.tbl = []
         #chk_list = range(3, self.num, 2)
         chk_list = [2] + list(range(3, self.num, 2))
         for i in chk_list:
-            if self.__is_prime(i):
+            if self._is_prime(i):
                 self.tbl.append(i)
-        return(self.tbl)
+        return self.tbl
 
 class Prime:
     """This class does generate prime numbers. It supports simple primality
@@ -53,30 +64,38 @@ class Prime:
     real test is the Rabin-Miller primality test."""
 
     def __init__(self, prime_bits, low_prime_list):
+        """.."""
         self.first_primes = Prime_Gen(low_prime_list).gen()
         self.bits = prime_bits
         self.msb = prime_bits
+        self.val = 123123
     def __set_bit(self, num):
+        """..."""
+        self.val = 5
         return num
-        if num == 0: return 0
-        msb = 0
-        n = int(n/2)
-        while(n > 0):
-            n = int(n/2)
-            msb += 1
-        pc = (1 <<msb)
+        #if num == 0: return 0
+        #msb = 0
+        #n = int(n/2)
+        #while n > 0:
+        #    n = int(n/2)
+        #    msb += 1
+        #pc = (1 <<msb)
     def try_rabinmiller(self, pc, iterations):
         '''Run Rabin-Miller primality test.'''
+
+        self.val = 10
+
         md2 = 0
         ec = pc - 1
 
         while ec % 2 == 0:
             ec >>= 1
             md2 += 1
-        assert(((2**md2) * ec) == pc-1) 
+        assert ((2**md2) * ec) == pc-1
 
 
         def try_composite(rt):
+            """Foobar"""
             if pow(rt, ec, pc) == 1:
                 return False
             for i in range(md2):
@@ -84,20 +103,22 @@ class Prime:
                     return False
             return True
 
-        for i in range(iterations):
-            round_tester = random.randrange(2,
-                pc)
+        for _ in range(iterations):
+            round_tester = random.randrange(2, pc)
             b1 = try_composite(round_tester)
-            if b1: 
+            if b1:
                 return False
         return True
-        
+
     def __try_helper(self, pc, div):
+        """.."""
+        self.val = 6
         if pc %div == 0:
             return False
         else:
             return True
     def try_number_low(self):
+        """.."""
         is_prob_prime = False
         pc = 0
 
@@ -113,24 +134,31 @@ class Prime:
                 else:
                     # pc ei ole alkuluku
                     break
-                    
+
                 is_prob_prime = True
-            if is_prob_prime: break
+            if is_prob_prime:
+                break
         return pc
-        
+
     def __n_bitrand(self, n):
+        """..."""
+        self.val = 1001
         v = random.randrange(2**(n-1)+1, 2**n-1)
-        
+
         return v
     def __print_iter(self, ch):
-        return
-        sys.stdout.write(ch)
-        sys.stdout.flush()
+        """foo"""
+        self.val = ch
+        #sys.stdout.write(ch)
+        #sys.stdout.flush()
     def __print_stop(self):
-        return
-        sys.stdout.write("\n")
-        sys.stdout.flush()
+        "doo"
+        self.val = 1234
+        #sys.stdout.write("\n")
+        #sys.stdout.flush()
     def gen_prime(self):
+        "kala"
+        self.val = 1232323
         iters = RM_iterations
         is_prime = False
         while True:
@@ -141,23 +169,14 @@ class Prime:
             else:
                 continue
         assert 0
-    
-class RSA_key:
-    def __init__(self):
-        pass
-
-    def __get_prime(self, bits):
-        pass        
-
-    def _ctor(self, bits):
-        prime1 = self.__gen_prime(bits)
-
 
 def GCD(x, y):
+    """GCD"""
     while y != 0:
         x, y = y, x % y
     return x
 def multiplicative_inverse(e, phi):
+    """Foo"""
     d = 0
     x1 = 0
     x2 = 1
@@ -171,7 +190,7 @@ def multiplicative_inverse(e, phi):
 
         x = x2 - temp1 * x1
         y = d - temp1 * y1
-    
+
         x2 = x1
         x1 = x
         d = y1
@@ -181,6 +200,7 @@ def multiplicative_inverse(e, phi):
 
 
 def __gen_keypair(p, q):
+    """foo"""
     n = p * q
     phi = (p-1) * (q-1)
     e = random.randrange(1, phi)
@@ -189,27 +209,33 @@ def __gen_keypair(p, q):
     while gcd != 1:
         e = random.randrange(1, phi)
         gcd = GCD(e, phi)
-    
+
     d = multiplicative_inverse(e, phi)
     return ((e, n), (d, n))
 def marshall_key(tup):
+    """ .. """
     t1 = str(tup[0])
     t2 = str(tup[1])
     return (t1, t2)
 def gen_keypair_internal():
-    p,_ = Prime(RSA_bits, RM_iterations).gen_prime()
-    q,_ = Prime(RSA_bits, RM_iterations).gen_prime()
-    
+    """  foo o"""
+    p, _ = Prime(RSA_bits, RM_iterations).gen_prime()
+    q, _ = Prime(RSA_bits, RM_iterations).gen_prime()
+    return (p, q)
+
 def gen_keypair():
-    p,_ = Prime(RSA_bits, RM_iterations).gen_prime()
-    q,_ = Prime(RSA_bits, RM_iterations).gen_prime()
-    if p == q: assert 0
+    """ Kalaa"""
+    p, _ = Prime(RSA_bits, RM_iterations).gen_prime()
+    q, _ = Prime(RSA_bits, RM_iterations).gen_prime()
+    if p == q:
+        assert 0
     (priv_t, pub_t) = __gen_keypair(p, q)
     (priv_e, priv_n) = marshall_key(priv_t)
     (pub_d, pub_n) = marshall_key(pub_t)
     return((priv_e, priv_n), (pub_d, pub_n))
-    
+
 def encrypt(pk, pt):
+    """Encrypt"""
     key, n = pk
     # XXX: Ugly hack since too much mangling of data around
     key = int(key)
@@ -218,8 +244,9 @@ def encrypt(pk, pt):
     assert 0
     return cipher
 def enc_str(pk, pt):
+    """encrypt string"""
     key, n = pk
-    key = int (key)
+    key = int(key)
     n = int(n)
     cipher = []
     for c in pt:
@@ -230,6 +257,7 @@ def enc_str(pk, pt):
     return cipher
 
 def decrypt(pk, ct):
+    """Decrypt"""
     key, n = pk
     # XXX: Ugly hack since too much magnling of data around
     key = int(key)
@@ -245,32 +273,43 @@ def decrypt(pk, ct):
 # RSA_Container ctor takes an argument called op which
 # is defined as an encrypt or decrypt operation.
 #
-class RSA_Container():
+class RSA_Container:
+    """RSA stuff"""
     def __init__(self, tup_keys, op, ifp, ofp):
+        """Foobar"""
         self.keys = tup_keys
         self.op = op
         self.ifp = ifp
         self.ofp = ofp
 
         self.ci = None
+
+        self.container = None
+        self.data = None
+        self.encrypted_data = None
+        self.encrypted_key = None
+        self.val = 12337
     def __extract_parts(self, data):
         """Returns RSA encrypted data and AES data."""
         mdata = data.split(bytes("\n", "utf-8"))
-        mdata = list(filter(lambda x:not not x, mdata))
+        mdata = list(filter(lambda x: not not x, mdata))
         # Whatever...
-        line1 = mdata[0]
+        #line1 = mdata[0]
         line2 = mdata[1]
         # line2 is now the stuff
-        line3 = mdata[2]
+        #line3 = mdata[2]
         line4 = mdata[3:]
-        
+
         line2 = line2[1:]
         line2 = line2[:-1]
         tbl = line2.split(bytes(", ", "utf-8"))
 
+        self.val += 1
+
         return (tbl, line4)
-        
+
     def do_it(self):
+        """do_it"""
         if self.op == OP_encrypt:
             self.encrypted_key = None
             self.encrypted_data = None
@@ -280,7 +319,7 @@ class RSA_Container():
             ci = aes.AES_Container(data, aes.AES_OP_encrypt)
             self.ci = ci
             ci.do_it()
-            
+
             self.encrypted_key = enc_str(self.keys, ci.aes_key)
             #self.encrypted_key = encrypt(self.keys, ci.aes_key)
             #self.encrytped_nonce = encrypt(self.keys, ci.aes_nonce)
@@ -288,23 +327,25 @@ class RSA_Container():
             data = self.ifp.read()
             # parse file:
             self.data = data
-            
+
             (rsa_encrypted, aes_encrypted) = self.__extract_parts(data)
             plaintext = decrypt(self.keys, rsa_encrypted)
-            
+
             ci = aes.AES_Container(aes_encrypted, aes.AES_OP_decrypt)
             ci.aes_key = bytes(plaintext, "utf-8")
             ci.aes_ciphertext = data
             ci.do_it()
             self.container = ci
-            aes_cleartext = ci.aes_cleartext
+            #aes_cleartext = ci.aes_cleartext
         else:
             assert 0
-            
-            
+
+
     def flush_dec(self):
+        """FOof"""
         self.ofp.write(self.container.aes_cleartext)
     def flush_enc(self):
+        """Bar"""
         # Header:
         self.ofp.write(RSA_Format_key_1)
         self.ofp.write(bytes(str(self.encrypted_key)+"\n", "utf-8"))
@@ -317,10 +358,10 @@ def main():
     foo = p2.try_rabinmiller(tv, 2000)
     print("foo: {} {}".format(foo, tv))
     sys.exit(0)"""
-    
+
     p = Prime(1024, 100)
     num, is_prime = p.gen_prime()
-    p.print_stop()
+    #p.print_stop()
     if is_prime:
         print("IS PRIME: {}".format(num))
     else:
