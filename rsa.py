@@ -45,7 +45,7 @@ class Prime_Gen:
 		for i in chk_list:
 			if self.__is_prime(i):
 				self.tbl.append(i)
-		return(self.tbl)
+		return self.tbl
 
 class Prime:
 	"""This class does generate prime numbers. It supports simple primality
