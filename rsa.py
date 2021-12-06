@@ -40,9 +40,6 @@ class Prime_Gen:
             return True
         elif n %2 == 0:
             return False
-        else:
-            assert 0
-            return -1
         cl = range(3, n, 2)
         for div in cl:
             if n % div == 0:
