@@ -3,7 +3,7 @@
 #
 #
 
-#import sys
+import sys
 import random
 
 import time
@@ -21,6 +21,8 @@ OP_encrypt = 2
 
 RSA_Format_key_1 = b"--------RSA Encrypted Data--------\n"
 RSA_Format_key_2 = b"--------RSA Encrypted Data Ends--------\n"
+AES_cleartext_1 = b"--------AES_Start------\n"
+AES_cleartext_2 = b"--------AES_Stop------\n"
 
 
 def pause():
@@ -243,6 +245,7 @@ def encrypt(pk, pt):
     return cipher
 def enc_str(pk, pt):
     """encrypt string"""
+    i = 0
     key, n = pk
     key = int(key)
     n = int(n)
@@ -263,7 +266,7 @@ def decrypt(pk, ct):
     #cleartext = [chr(pow(c, key, n)) for c in ct]
     cleartext = []
     for ct_byte in ct:
-        #print ("ct_byte: {}".format(ct_byte))
+        print ("ct_byte: {}".format(ct_byte))
         ct_byte = int(ct_byte) #, 10)
         cleartext.append(chr(pow(ct_byte, key, n)))
     return "".join(cleartext)
@@ -274,12 +277,12 @@ def decrypt(pk, ct):
 #
 class RSA_Container:
     """RSA stuff"""
-    def __init__(self, tup_keys, op, ifp, ofp):
+    def __init__(self, tup_keys, op, ifd):
         """Foobar"""
         self.keys = tup_keys
         self.op = op
-        self.ifp = ifp
-        self.ofp = ofp
+        self.ifd = ifd
+        #self.ofp = ofp
 
         self.ci = None
 
@@ -288,7 +291,10 @@ class RSA_Container:
         self.encrypted_data = None
         self.encrypted_key = None
         self.val = 12337
-    def __extract_parts(self, data):
+
+        self.data_len = 0
+
+    def foo__extract_parts(self, data):
         """Returns RSA encrypted data and AES data."""
         mdata = data.split(bytes("\n", "utf-8"))
         mdata = list(filter(lambda x: not not x, mdata))
@@ -304,8 +310,43 @@ class RSA_Container:
         tbl = line2.split(bytes(", ", "utf-8"))
 
         self.val += 1
+        #print("HAUKI: {}".format(tbl))
+        #print("len(HAUKI): {}".format(len(tbl)))
+        #print("KUHA : {}".format(line4))
+        print("line4: {}".format(len(line4)))
+        kalat = tbl[4:]
+        print("kalat: {}".format(len(kalat)))
 
+        assert 0
         return (tbl, line4)
+    def __extract_parts_2(self, data):
+        pos1 = self.data.find(RSA_Format_key_1)
+        if pos1 == -1:
+            print("[1] encoded file format failed")
+            sys.exit(1)
+        pos2 = self.data.find(RSA_Format_key_2)
+        if pos2 == -1:
+            print("[2] encoded file format failed")
+            sys.exit(1) 
+        pos3 = self.data.find(AES_cleartext_1)
+        if pos3 == -1:
+            print ("[3] encoded file format failed")
+            sys.exit(1)
+        pos4 = self.data.find(AES_cleartext_2)
+        if pos4 == -1:
+            print ("[4] encoded file format failed")
+            sys.exit(1)
+        self.hdr_len = pos2+len(RSA_Format_key_2)
+        rsa_part = data[pos1+len(RSA_Format_key_1):pos2][1:-1]
+        rsa_data = rsa_part[0:-1]
+        rsa_data = rsa_data.split(bytes(", ", "utf-8"))
+        print ("rsa_data: {}".format(rsa_data))
+
+        aes_part = data[pos3+len(AES_cleartext_1):pos4]
+        self.data_len = int(aes_part)
+
+        rest = data[pos4+len(AES_cleartext_2):]
+        return(rsa_data, rest)
 
     def do_it(self):
         """do_it"""
@@ -313,27 +354,50 @@ class RSA_Container:
             self.encrypted_key = None
             self.encrypted_data = None
 
-            data = self.ifp.read()
+            data = self.ifd #self.ifp.read()
 
             ci = aes.AES_Container(data, aes.AES_OP_encrypt)
             self.ci = ci
+            self.data_len = ci.real_datalen
             ci.do_it()
 
             self.encrypted_key = enc_str(self.keys, ci.aes_key)
             #self.encrypted_key = encrypt(self.keys, ci.aes_key)
             #self.encrytped_nonce = encrypt(self.keys, ci.aes_nonce)
         elif self.op == OP_decrypt:
-            data = self.ifp.read()
+            data = self.ifd #self.ifp.read()
             # parse file:
             self.data = data
 
-            (rsa_encrypted, aes_encrypted) = self.__extract_parts(data)
-            plaintext = decrypt(self.keys, rsa_encrypted)
+            print("self.data len: {}".format(len(self.data)))
+            #assert 0
+            (rsa_enc, aes_encrypted) = self.__extract_parts_2(data)
+            #print("rsa_encrypted: {}".format(rsa_encrypted))
+            #print("aes_encrytped: {}".format(aes_encrypted))
+            print("len....      : {}".format(len(rsa_enc)))
+            print("len kala     : {}".format(len(aes_encrypted)))
+
+            plaintext = decrypt(self.keys, rsa_enc)
+            #print("plaintext: {}".format(plaintext))
+            #print("len(plain): {}".format(len(plaintext)))
+            assert len(plaintext) == 16
 
             ci = aes.AES_Container(aes_encrypted, aes.AES_OP_decrypt)
-            ci.aes_key = bytes(plaintext, "utf-8")
+            #ci.aes_key = bytes(plaintext, "utf-8")
+            ci.aes_key = plaintext
+            #ci.aes_key = bytes(plaintext, 'latin1')
+            #print("plaintext: {}".format(plaintext))
+            #print("plaintext len: {}".format(len(plaintext)))
+            #print("ci.aes_key: {}".format(ci.aes_key))
+            #print("ci.aes_key len: {}".format(len(ci.aes_key)))
+            assert len(ci.aes_key) == 16
             ci.aes_ciphertext = data
+            
+            #
+            # Do the AES decryption.
+            #
             ci.do_it()
+
             self.container = ci
             #aes_cleartext = ci.aes_cleartext
         else:
@@ -342,14 +406,27 @@ class RSA_Container:
 
     def flush_dec(self):
         """FOof"""
-        self.ofp.write(self.container.aes_cleartext)
+        #self.ofp.write(self.container.aes_cleartext)
+        #print("len(self.container.aes_cleartext: {}".format(len(self.container.aes_cleartext)))
+        #print("len(ifd): {}".format(len(self.ifd)))
+        #print("True story: {}".format(len(self.container.aes_cleartext)))
+        return self.container.aes_cleartext
     def flush_enc(self):
         """Bar"""
+        rv = ""
         # Header:
-        self.ofp.write(RSA_Format_key_1)
-        self.ofp.write(bytes(str(self.encrypted_key)+"\n", "utf-8"))
-        self.ofp.write(RSA_Format_key_2)
-        self.ofp.write(self.ci.aes_ciphertext)
+        rv = RSA_Format_key_1
+        rv += bytes(str(self.encrypted_key)+"\n", "utf-8")
+        rv += RSA_Format_key_2
+        rv += AES_cleartext_1
+        rv += bytes("{}\n".format(self.data_len), "ascii")
+        rv += AES_cleartext_2
+        rv += self.ci.aes_ciphertext
+        #self.ofp.write(RSA_Format_key_1)
+        #self.ofp.write(bytes(str(self.encrypted_key)+"\n", "utf-8"))
+        #self.ofp.write(RSA_Format_key_2)
+        #self.ofp.write(self.ci.aes_ciphertext)
+        return rv
 
 def main():
     """p2 = Prime(1024, 100)
