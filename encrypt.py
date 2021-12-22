@@ -8,6 +8,7 @@ if __name__ != "__main__":
 import cruft
 import sys
 import getopt
+import time
 
 import rsa
 import aes
@@ -62,6 +63,8 @@ def main():
     #    ifp = open (ifile, "rb")
     #ifd = ifp.read()
     #ifp.close()
+
+    t1 = time.time()
     
     ifd = ""
     with open(ifile, "rb") as input_file:
@@ -74,12 +77,19 @@ def main():
         
     e, n = cruft.read_pub_key(cfile)
     
+    t1 = time.time()
     rsa_container = rsa.RSA_Container((e, n), rsa.OP_encrypt, ifd)
     rsa_container.do_it()
     ct = rsa_container.flush_enc()
+
     with open(ofile, "wb") as secfile:
         secfile.write(ct)
+    t2 = time.time()
+    tmp = (len(ifd)/1000000) / (t2-t1)
+    mbps =  cruft.truncate_float(tmp, 3)
+    print("Encryption elapsed {} seconds ({}MiB/sec)".format(cruft.truncate_float(t2-t1,3), mbps))
+    return 0
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
 
 # EOF

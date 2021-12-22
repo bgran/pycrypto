@@ -143,14 +143,14 @@ class AES_Container():
             ci = AES.new(aes_sec, AES.MODE_CBC, iv)
             #self.aes_cleartext = ci.decrypt(self.aes_ciphertext)
             #print("self.content: {}".format(self.content))
-            print ("boundary: {}".format(len(self.content)))
+            #print ("boundary: {}".format(len(self.content)))
             #assert 0
             d = self.content
-            print("eka: {}".format(len(d)))
+            #print("eka: {}".format(len(d)))
             #d = pad(d, 16)
-            print("toka: {}".format(len(d)))
+            #print("toka: {}".format(len(d)))
             self.aes_cleartext = ci.decrypt(d)
-            print("foo: {}".format(len(self.aes_cleartext) % 16))
+            #print("foo: {}".format(len(self.aes_cleartext) % 16))
         else:
             assert 0
 

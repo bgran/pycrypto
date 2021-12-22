@@ -11,9 +11,10 @@ import time
 
 
 import aes
+from cruft import truncate_float
 
 RSA_bits = 1024
-RM_iterations = 20
+RM_iterations = 500
 
 OP_decrypt = 1
 OP_encrypt = 2
@@ -95,11 +96,17 @@ class Prime:
 
         def try_composite(rt):
             """Foobar"""
+            #print("try_composite..", end="")
+            t1 = time.time()
             if pow(rt, ec, pc) == 1:
                 return False
             for i in range(md2):
                 if pow(rt, pow(2, i) * ec, pc) == pc - 1:
+                    t2 = time.time()
+                    #print("try_composite failed in {} seconds".format(t2-t1))
                     return False
+            t2 = time.time()
+            #print("try_composite succedded in {} seconds".format(t2-t1))
             return True
 
         for _ in range(iterations):
@@ -160,12 +167,17 @@ class Prime:
         self.val = 1232323
         iters = RM_iterations
         is_prime = False
+        t1 = time.time()
         while True:
             pc = self.try_number_low()
             is_prime = self.try_rabinmiller(pc, iters)
             if is_prime:
+                t2 = time.time()
+                print("Prime found, seconds elapsed {}".format(truncate_float(t2-t1, 3)))
                 return (pc, is_prime)
             else:
+                t2 = time.time()
+                #print(" <- {} seconds elapsed".format(t2-t1))
                 continue
         assert 0
 
@@ -196,20 +208,28 @@ def multiplicative_inverse(e, phi):
         y1 = y
     if temp_phi == 1:
         return d + phi
-
+    else:
+        print("Bork bork")
+        assert 0
 
 def __gen_keypair(p, q):
-    """foo"""
+    """Return a tuple of two tuples so that the first tuple is
+    the public key and the second tuple is the private key."""
+    t1 = time.time()
     n = p * q
     phi = (p-1) * (q-1)
     e = random.randrange(1, phi)
     gcd = GCD(e, phi)
 
     while gcd != 1:
+        t2 = time.time()
+        #print (" -> GCD != 1:")
         e = random.randrange(1, phi)
         gcd = GCD(e, phi)
 
     d = multiplicative_inverse(e, phi)
+    t2 = time.time()
+    print("Generation of e and d elapsed {} seconds".format(truncate_float(t2-t1, 3)))
     return ((e, n), (d, n))
 def marshall_key(tup):
     """ .. """
@@ -266,11 +286,31 @@ def decrypt(pk, ct):
     #cleartext = [chr(pow(c, key, n)) for c in ct]
     cleartext = []
     for ct_byte in ct:
-        print ("ct_byte: {}".format(ct_byte))
+        #print ("ct_byte: {}".format(ct_byte))
         ct_byte = int(ct_byte) #, 10)
         cleartext.append(chr(pow(ct_byte, key, n)))
     return "".join(cleartext)
 
+def signature_gen(pk, m):
+    """Gen signature."""
+    key, n = pk
+    key = int(key)
+    n   = int (n)
+    r = []
+    for ct_byte in m:
+        ct_byte = int(ct_byte)
+        r.append(chr(pow(ct_byte, key, n)))
+    return "".join(r)
+def signature_verify(pk, sig):
+    key, n = pk
+    key = int(key)
+    n   = int (n)
+    r = []
+    for ct_byte in sig:
+        ct_byte = int(ct_byte)
+        r.append(chr(pow(ct_byte, key, n)))
+    return "".join(r)
+        
 #
 # RSA_Container ctor takes an argument called op which
 # is defined as an encrypt or decrypt operation.
@@ -313,9 +353,9 @@ class RSA_Container:
         #print("HAUKI: {}".format(tbl))
         #print("len(HAUKI): {}".format(len(tbl)))
         #print("KUHA : {}".format(line4))
-        print("line4: {}".format(len(line4)))
+        #print("line4: {}".format(len(line4)))
         kalat = tbl[4:]
-        print("kalat: {}".format(len(kalat)))
+        #print("kalat: {}".format(len(kalat)))
 
         assert 0
         return (tbl, line4)
@@ -340,7 +380,7 @@ class RSA_Container:
         rsa_part = data[pos1+len(RSA_Format_key_1):pos2][1:-1]
         rsa_data = rsa_part[0:-1]
         rsa_data = rsa_data.split(bytes(", ", "utf-8"))
-        print ("rsa_data: {}".format(rsa_data))
+        #print ("rsa_data: {}".format(rsa_data))
 
         aes_part = data[pos3+len(AES_cleartext_1):pos4]
         self.data_len = int(aes_part)
@@ -369,13 +409,13 @@ class RSA_Container:
             # parse file:
             self.data = data
 
-            print("self.data len: {}".format(len(self.data)))
+            #print("self.data len: {}".format(len(self.data)))
             #assert 0
             (rsa_enc, aes_encrypted) = self.__extract_parts_2(data)
             #print("rsa_encrypted: {}".format(rsa_encrypted))
             #print("aes_encrytped: {}".format(aes_encrypted))
-            print("len....      : {}".format(len(rsa_enc)))
-            print("len kala     : {}".format(len(aes_encrypted)))
+            #print("len....      : {}".format(len(rsa_enc)))
+            #print("len kala     : {}".format(len(aes_encrypted)))
 
             plaintext = decrypt(self.keys, rsa_enc)
             #print("plaintext: {}".format(plaintext))

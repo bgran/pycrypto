@@ -10,6 +10,8 @@ import cruft
 import sys
 import getopt
 import codecs
+import time
+import math
 
 import rsa
 import aes
@@ -80,13 +82,18 @@ def main():
     #
     # Do RSA and AES processing
     #
+    t1 = time.time()
     rsa_container = rsa.RSA_Container((d, n), rsa.OP_decrypt, ifd)
     rsa_container.do_it()
     clear_text = rsa_container.flush_dec()
 
+    #tmp = (len(ifd)/1000000) / (t2-t1)
+    #mbps =  cruft.truncate_float(tmp, 3)
+    #print("Decryption elapsed {} seconds ({}MiB/sec)".format(t2-t1, mbps))
 
-    print("clear_text: {}".format(len(clear_text)))
-    print("data_len:   {}".format(rsa_container.data_len))
+
+    #print("clear_text: {}".format(len(clear_text)))
+    #print("data_len:   {}".format(rsa_container.data_len))
     
 
     #
@@ -101,9 +108,13 @@ def main():
     # Write output to file
     #
     with open(ofile, "wb") as output_file:
-        print ("openinig shit")
         output_file.write(clear_text)
+    t2 = time.time()
+    tmp = (len(ifd)/1000000) / (t2-t1)
+    mbps =  cruft.truncate_float(tmp, 3)
+    print("Decryption elapsed {} seconds ({}MiB/sec)".format(cruft.truncate_float(t2-t1, 3), mbps))
+    return 0
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
 
 # EOF

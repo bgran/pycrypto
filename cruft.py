@@ -3,6 +3,7 @@
 #
 
 import sys,os
+import math
 
 
 def debug(s):
@@ -60,6 +61,9 @@ def read_pub_key(fn):
     n = int(n)
     return (d, n)
 
+def truncate_float(number, digits):
+    stepper = 10.0 ** digits
+    return math.trunc(stepper * number) / stepper
 
 
 # EOF
