@@ -14,7 +14,7 @@ import aes
 from cruft import truncate_float
 
 RSA_bits = 1024
-RM_iterations = 500
+RM_iterations = 250
 
 OP_decrypt = 1
 OP_encrypt = 2
@@ -52,6 +52,7 @@ class Prime_Gen:
         """..."""
         self.tbl = []
         #chk_list = range(3, self.num, 2)
+        #print("self.num: [{}]".format(self.num))
         chk_list = [2] + list(range(3, self.num, 2))
         for i in chk_list:
             if self._is_prime(i):
@@ -255,6 +256,8 @@ def gen_keypair():
 
 def encrypt(pk, pt):
     """Encrypt"""
+    #print ("====> encrypt()")
+    t1 = time.time()
     key, n = pk
     # XXX: Ugly hack since too much mangling of data around
     key = int(key)
@@ -262,9 +265,13 @@ def encrypt(pk, pt):
     cipher = [pow(ord(c), key, n) for c in pt]
     #### XXX bgran
     #assert 0
+    t2 = time.time()
+    #print("RSA encrypt: {} seconds".format(t2-t1))
     return cipher
 def enc_str(pk, pt):
     """encrypt string"""
+    #print("====> enc_str")
+    t1 = time.time()
     i = 0
     key, n = pk
     key = int(key)
@@ -272,13 +279,21 @@ def enc_str(pk, pt):
     cipher = []
     for c in pt:
         c = chr(c)
+        t2_1 = time.time()
+        #print("====> Doing the pow for RSA")
         v = pow(ord(c), key, n)
+        t2_2 = time.time()
+        #print("====> done with pow {} seconds".format(t2_2 - t2_1))
         i += 1
         cipher.append(v)
+    t2 = time.time()
+    #print("RSA encrypt (str): {} seconds".format(t2-t1))
     return cipher
 
 def decrypt(pk, ct):
     """Decrypt"""
+    #print("====> decrypt")
+    t1 = time.time()
     key, n = pk
     # XXX: Ugly hack since too much magnling of data around
     key = int(key)
@@ -287,8 +302,15 @@ def decrypt(pk, ct):
     cleartext = []
     for ct_byte in ct:
         #print ("ct_byte: {}".format(ct_byte))
+        #print("====> Doing the pow for RSA decrypt")
+        #t2_1 = time.time()
         ct_byte = int(ct_byte) #, 10)
+        t2_1 = time.time()
         cleartext.append(chr(pow(ct_byte, key, n)))
+        t2_2 = time.time()
+        #print("====> done with pow {} seconds".format(t2_2 - t2_1))
+    t2 = time.time()
+    #print("RSA decrypt: {} seconds".format(t2-t1))
     return "".join(cleartext)
 
 def signature_gen(pk, m):
