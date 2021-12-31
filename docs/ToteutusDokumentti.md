@@ -33,4 +33,15 @@ Ohjenuora tehokkaan ja turvallisen datan enkoodamiseen ja dekoodaamiseen.
 3. `aes.py`
     - Luokka AES -salauksen enkapsuloinniksi.
 
+## Ohjelman puutteet ja parannusehdotukset
+
+RSA -salaisuus tallennetaan ECB -moodissa suoraan kryptattavaan tiedostoon
+joka saattaa vuotaa siis tietoja käytetystä AES-salaisuudesta koska
+salattu arvo cipher tavulle cleartext on sama aina kun cleartext tulee vastaan
+salatussa datassa, eli pystyy tekemään johtopäätöksiä salatusta datasta.
+
+## Lähteet
+
+- Applied Cryptography, Second Edition, Bruce Schneier
+- AES -esimerkit https://pycryptodome.readthedocs.io/en/latest/src/examples.html
 
