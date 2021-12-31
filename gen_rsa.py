@@ -30,10 +30,10 @@ def test():
         return False
 
 def crypto_test():
-    print("Generating first prime")
+    #print("Generating first prime")
     #######p1 = rsa.Prime(RSA_bits, RM_iterations)
     #######p,_ = p1.gen_prime()
-    print("Generating second prime")
+    #print("Generating second prime")
     ######p2 = rsa.Prime(RSA_bits, RM_iterations)
     #######q,_ = p2.gen_prime()
 
