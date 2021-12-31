@@ -11,7 +11,8 @@ Ohjelmistossa on kolme asiaa joita voi testata:
 
 ### Ohjelmistologiikka
 
-Testataan RSA -moduulin avaintenluontilogiikka.
+Testataan RSA -moduulin avaintenluontilogiikka. Testataan myös
+kryptauksen toimivuuttaa ja nopeutta.
 
 ## Testikattavuus
 
@@ -30,7 +31,16 @@ enkryptaamiseen. Kun RSA -salaisuus on purettu niin kryptaus on erittäin
 tehokas operaatio.
 
 Tehokasta alkulukujen generointia siis tapahtuu melko hitaasti. Keskimääräisesti
-21 sekunttia menee alkuluvun generointiin.
+21 sekunttia menee alkuluvun generointiin. Patolooginen 8192-bittinen alkulukupari
+kesti kehittää `gen_rsa.py` -ohjelmalla kymmenen tuntia nopealla XEON -koneella.
+
+Ohjelmisto siis tekee melko suoraviivaisen lukemisen ja kirjoituksen bufferi-muuttujaan 
+joka varaa muistia sen tarpeisiin. Tässä on optimoimisen mahdollisuus ohjelmiston koon
+suhteen muistijäljessä.
+
+Testattiin myös 8192 -bittinen p ja q arvot joiden vaikutus enkryptaamiseen oli 10
+sekunttia per selkokielinen tavu ja dekryptaaminen kului 13 sekunttia per 
+kryptattu tavu.
 
 Itse salattavan tiedoston koko kasvattaa suoritusaikaa lineäärisesti. O(n)
 
