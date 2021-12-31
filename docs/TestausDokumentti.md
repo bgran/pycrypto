@@ -16,7 +16,7 @@ kryptauksen toimivuuttaa ja nopeutta.
 
 ## Testikattavuus
 
-Coverage testitulokset saadaan [tästä](coverage_20211206.txt).
+Coverage testitulokset saadaan [tästä](docs/coverage_20211231.txt).
 
 ## Järjestelmätestaus
 
