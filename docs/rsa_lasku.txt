@@ -1,0 +1,33 @@
+Eli tässä on miten RSA toimii:
+
+1)  Eli ensin otetaan kaksi alkulukua joiden koko on luokkaa suuri, eli p ja q.
+2)  Lasketaan n = p * q
+3)  Lasketaan phi(n) = (p-1)*(q-1)
+4)  Valitaan e siten että e on suurempi kuin 1 ja piempi kuin phi(n), ja siten että
+    e ja phi(n) ovat suhteellisia alkulukuja, (coprime) eli e ja phi(n) ovat jaollisia
+    vain numerolla 1. Eli niiden suurin yhteinen tekijä on 1. Eli GCD(e, phi(n)) == 1.
+5)  Laske numero d jolla (d * e) mod phi(n) == 1
+    ... tai erillailla GCD(phi(n), (d*e)) == 1
+6)  Julkinen avain on (e, n)
+    Salainen avain on (d, n)
+
+    Nyt kryptaus tapahtuu esim. viestille m = 2
+        m = 2
+        c = m^e mod n
+        jossa c on kryptattu viesti
+    Purkaminen toimii sitten
+        m = c^d mod n
+        jossa m on selväkielinen viesti ja c on
+        kryptattu viesti
+
+RSA toimii siis periaateessa suurien alkulukujen varassa. Johtuen kokoluokasta on
+selvää että salaus on hyvin hidasta. Bruce Schneier kirjoittaa Applied Cryptographics
+kirjassaan että RSA on 100 kertaa hitaampi kuin DES -algoritmi.
+
+Eli alkulukujen generointiin tarvitaan siis alkuluku seula, jonka naiivi versio on
+että tutkitaan esim. ensimmäiset 10'000 alkulukua ja verrataan niihin suurta lukua. Tämä
+on pienimuotoninen optimisaatio. Itse testi on ajaa Rabin-Miller testillä läpi
+annettua lukua tarpeeksi monta kertaa että voidaan todeta että luku on alkuluku
+hyvin todennäköisesti. Rabin-Milleriä ei käydä läpi johtuen siitä että se on
+hankala.
+

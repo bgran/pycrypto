@@ -1,0 +1,96 @@
+Eli minä olen Bo ja olen tehnyt RSA -pohjaisen tiedoston salaussoftan.
+
+-- avaa etukäteen terminaali joka peittää koko ruudun. Ja chdir(pycrypto).
+-- % figlet "Hello World!"
+
+Eli ensimmäiseksi annan erittäin lyhyen oppimäärän RSA:sta, eli Rivest-Samir-Adlemann nimisten
+kaverien tekemästä assymetrisestä salausalgoritmistä.
+
+-- avaa rsa_lasku.txt -tiedosto terminaaliin.
+-- Selitä mitä tapahtuu rsa_lasku.txt:ssä, ja siirry pois siitä sitten.
+
+Assymetria tarkoittaa että on olemassa kaksi avainta jotka liittyvät yhteen. Eli
+julkinen ja salainen avain.
+    Eli salaisella avaimella avataan sinulle lähtetty viesti
+    Ja julkisella avaimella (eli vastaanottajan julkinen avain) kryptataan viesti
+    jota lähetät vastaanottajalle.
+Julkisesta avaimesta on hyvin hankala selvittää salaista avainta, joten sitä voi
+    levittää kaikkialle. Eli on hyvä asia jos julkinen avaimesi on mahdollisimman
+    laajalle levinnyt.
+
+Eli RSA tukee salausta ja allekirjoitusta. Allekirjoitusta ei ole toteutettu koska
+se on vähän skoopin ulkopuolella.
+
+Eli RSA on sopimaton algoritmi suurten datamäärien salaukseen. On olemassa tehokkaampia
+symmetrisiä algoritmejä kuten AES ja Blowfish ja 3DES.
+
+Symmetrinen tarkoittaa että yhtä avainta käytetään sekä salaukseen että purkamiseen. Eli
+näillä symmetrisillä algoritmeillä on siis eri toimintamoodeja joista tunnetuin on ehkä
+CBC eli Ciphertext Block Chaining. Se siis salaa viestin siten että seuraava palikka dataa
+jota salataan riippuu edellisellä kierroksella kryptausta datasta eli se ei ole
+semanttisesti epäturvallinen, koska blokkien välilllä ei ole korrelaatiota vaikka
+salattava data toistuisi selkokielisessä syötteessä.
+Eli: jos koodattavassa datasas on esim. neljäs kirjain "s" ja seitsemäs kirjain om myös "s"
+     niin salattu data ei kirjoita samaa arvoa kahteen paikkaan vaikka niillä on sama 
+     selkokielinen arvo.
+
+Näissä tapauksissa RSA:ta käytetään
+salaamaan AES -salauksen avainta. Eli ensin tehdään salaisuus eli 16 -merkkiä (eli 128-bittiä)
+pitkä salaisuus. Salaisuus kryptataan vastaanottajan julkisella avaimella, ja vastaanottaja
+avaa viestin salaisella avaimellaan. Näin puretaan AES -salaisuus jota käytettään sitten
+datan purkamiseen. (Listätään vielä että AES -salaisuus voi olla 128, 192 tai 256 -bittiä pitkä).
+
+--- demotaan setit
+% cd pycrypto
+% ./gen_rsa.py
+.... -> avain
+% ./encrypt.py -c avain.pub -i linux-source.tar.gz -o linux-source.tar.gz.enc
+....
+% ./decrypt.py -c avain -i linux-source.tar.gz.enc -o cleartext
+....
+# Tehdään tarkastusumma-varmistus siitä että linux-source.tar.gz ja cleartext
+# ovat samat tiedostot.
+% sha224sum linux-source.tar.gz cleartext
+46b1c267b1675666b3fde93f3c6a4669f99037eb1b0200af2417821e  linux-source.tar.gz
+46b1c267b1675666b3fde93f3c6a4669f99037eb1b0200af2417821e  cleartext
+
+
+Eli avainten datamuoto tallennettuna tiedostojärjestelmään on siis
+    % cat avain
+    % cat avain.pub
+Jossa avain on salainen avain ja avain.pub on julkinen avain. Softa toimii siten että
+se hakee e ja n -arvot tuosta RSAn lyhyestä oppimäärästä ja kirjoittaa ne suoraan
+yhdelle riville kumpikin arvo erikseen. d ja n -arvot tallennetaan samallailla
+omille riveilleen salaiseen avaimeen.
+
+--- avaa linux-source.tar.gz.enc ja näytä headerit ja alku kryptodatasta.
+
+Eli salatun viestin mukana tulee siis:
+headerit joita on kaksi:
+	1) RSA -salattu AES -salasana
+	2) Selkokielisen datan koko, koska AES:ssä kaikki blokit ovat 16-tavuisia
+		johtuen siitä miten salaus toimii. Tämä tarkoittaa että salattu data
+		on 16 tavuun kohdistettu, joten kokoa tarvitaan että saadaan tehtyä
+		dekryptatusta datasta sama tiedosto kuin alkuperäinen selkokielinen
+		data oli.
+ja headereiden jälkeen tulee raaka AES-koodattu data, ilman base64 tms. enkoodausta.
+Syy miksei base64-koodausta käytetty on siis päätös joka on varmaan vähän huono.
+Myös RSA -salatut datat ovat ns. ECB (Electronic Code Book) modella tehtyjä, eli
+salatun paketin sisällöstä voi tehdä johtopäätöksiä siten että jos kaksi RSA-kodattua
+selkokielistä dataa on esim. "a", niin RSA -koodattu data on sama kahdelle "a":n
+arvolle...
+
+.... esittele .enc -tiedosto lessillä: eli RSA-salaisuudet ja niiden arvot.
+
+...eli voi tehdä johtopäätöksiä siitä mitä salaisuuksia AES-salasana sisältää. Mikä
+on vähän huono juttu.
+
+Mitä opittiin tästä asiasta?
+- Python integerien koko on mielivaltainen ja ei tarvinut käyttää gmp:tä tai vastaavaa
+  BigInt -toteutusta.
+- Datan salaus on hankalaa ja sen saaminen toimimaan oikein on erittäin hankalaa, mistä
+  Bruce Schneier onkin puhunut moneen otteeseen että kryptograaffikot tekisivät salaus-
+  järjestelmiä. Tähän viittaa monta naivia päätöstä jotka tehty sovelluksen kehityksessä
+  esim. juuri AES-salaisuuden salaus RSA:lla on tehty naivisti.
+- RSA saa turvallisuutensa siitä että on hankala ongelma faktorisoida lukuja tekijöihinsä.
+
