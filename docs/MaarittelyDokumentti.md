@@ -21,9 +21,8 @@ laajennuksia Python C-API:a vastaan ei tehdä. Ohjelmiston käyttötapaukset ova
 * Avainparin salainen osa on piillotettava.
 * Komento "encrypt" koodaa selkokielisen datan ja koodaa RSA:lla AES -avaimen.
 * Komento "decrypt" purkaa AES -avaimen RSA -salauksesta ja avaa sillä ns. cipher-tekstin.
-* Komentokehotteessa annettu ympäristömuuttuja eli. $PYCRYPTO_DIR on annettu hakemisto josta käsin saa julkisen ja salaisen avaimen.
 * On mahdollista tehdä useita avainpareja yhdelle käyttäjälle.
-* Ohjelmisto ei tue salasanojen asettaimsta avainparilla.
+* Ohjelmisto ei tue salasanojen asettaimsta avainparille.
 
 ## Ohjelmiston toiminta
 
