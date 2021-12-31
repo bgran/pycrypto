@@ -4,6 +4,12 @@
 
 Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (perioodi II) Laboratorio-työskentely
 Toeutuskieli: Python (3)
+Opinto-ohjelma: Tietojenkäsittelytieteen kandiohjelma.
+Kieli: Suomi
+
+Toteutetaaan RSA-salausalgoritmi (Rivest-Shamir-Adleman, 1978). RSA on assymetrinen kryptoalgoritmi
+jolla on mahdollista salata, purkaa ja allekirjoittaa tietoa. RSA on turvallinen koska isojen
+lukujen tekijöihin jako on hyvin hankala operaatio.
 
 ## Käyttötapauksia
 
@@ -49,4 +55,17 @@ todennäköisesti alkuluku generoitua. On vielä hieman tutkittava miten monta i
 Rabin-Milleriä on parasta ajaa. Eli on perusteltua tuhlata hieman avainmahdollisuuksia
 tekemällä ensimmäisen p ja q -arvojen MSB, eli eniten merkitsevä bitti yhdeksi. Tämä estää
 tapaukset joissa avainpari ei ole ikinä pienempi kuin 1024 -bittiä.
+
+## Aikavaativuus
+
+Koska softa on tehty järkevästi ei nopeudella oli suurta merkitystä sen suhteen, että miten
+nopeasti salataan dataa. Eli RSA:n osalta tulee aikavaativuuksia:
+    - Rabin-Miller alkulukutesti
+        - Aikavaativuus: O(k log^3 n), missä k on iteraatoiden määrä ja n on testattava luku.
+    - Alkulukujnen p ja q kehittäminen
+        - Aikavaativuus O(log n)
+    - n = p * q
+        - Aikavaativuus (n^2)
+    - Enkryptio ja dekryptio
+        - Modulus-operaation laskenta on pahimassa tapauksessa O(M(n)2^k).
 

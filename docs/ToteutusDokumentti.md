@@ -30,3 +30,7 @@ Ohjenuora tehokkaan ja turvallisen datan enkoodamiseen ja dekoodaamiseen.
 4. `decrypt.py`
 	- Purkaa salauksen salaisella avaimella.
 
+3. `aes.py`
+    - Luokka AES -salauksen enkapsuloinniksi.
+
+
