@@ -6,6 +6,8 @@ import sys, os, time
 import rsa, cruft
 from cruft import truncate_float
 
+from rsa import RSA_bits, RM_iterations
+
 def usage():
     print ("Usage: {} -i inputfile -o outputfile".format(sys.argv[0]))
     print ("Will output a RSA keypair to $HOME/.pycrypto..")
@@ -29,11 +31,11 @@ def test():
 
 def crypto_test():
     print("Generating first prime")
-    p1 = rsa.Prime(1024, 1000)
-    p,_ = p1.gen_prime()
+    #######p1 = rsa.Prime(RSA_bits, RM_iterations)
+    #######p,_ = p1.gen_prime()
     print("Generating second prime")
-    p2 = rsa.Prime(1024, 1000)
-    q,_ = p2.gen_prime()
+    ######p2 = rsa.Prime(RSA_bits, RM_iterations)
+    #######q,_ = p2.gen_prime()
 
     #return(test(p, q))
     return (test())
